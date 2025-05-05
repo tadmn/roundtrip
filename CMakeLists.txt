@@ -16,7 +16,7 @@ include(JUCEDefaults)
 # This is the internal name of the project and the name of JUCE's shared code target
 # Note: This cannot have spaces (it may be 2024, but you can't have it all!)
 # Worry not, JUCE's PRODUCT_NAME can have spaces (and is what DAWs display)
-set(PROJECT_NAME "RoundTrip")
+set(PROJECT_NAME "roundtrip")
 
 # Worry not, JUCE's PRODUCT_NAME can have spaces (and is what DAWs will display)
 # You can also just have it be the same thing as PROJECT_NAME
@@ -38,6 +38,14 @@ set(FORMATS Standalone AU VST3)
 
 # For simplicity, the name of the CMake project is also the name of the target
 project(${PROJECT_NAME} VERSION ${CURRENT_VERSION})
+
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(FFMPEG REQUIRED
+  libavcodec
+  libavformat
+  libavutil
+  libswresample
+)
 
 # JUCE is setup as a submodule in the /JUCE folder
 # Locally, you must run `git submodule update --init --recursive` once
@@ -126,6 +134,9 @@ target_compile_definitions(SharedCode
     PRODUCT_NAME_WITHOUT_VERSION="Round Trip"
 )
 
+target_include_directories(SharedCode INTERFACE ${FFMPEG_INCLUDE_DIRS})
+target_link_directories(SharedCode INTERFACE ${FFMPEG_LIBRARY_DIRS})
+
 # Link to any other modules you added (with juce_add_module) here!
 # Usually JUCE modules must have PRIVATE visibility
 # See https://github.com/juce-framework/JUCE/blob/master/docs/CMake%20API.md#juce_add_module
@@ -142,7 +153,8 @@ target_link_libraries(SharedCode
     juce_gui_extra
     juce::juce_recommended_config_flags
     juce::juce_recommended_lto_flags
-    juce::juce_recommended_warning_flags)
+    juce::juce_recommended_warning_flags
+    ${FFMPEG_LIBRARIES})
 
 # Link the JUCE plugin targets our SharedCode target
 target_link_libraries("${PROJECT_NAME}" PRIVATE SharedCode)

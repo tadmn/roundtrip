@@ -1,3 +1,10 @@
+# Build Prep
+```
+macOS:
+brew install pkg-config
+brew install ffmpeg
+```
+
 ![PAMPLEJUCE](assets/images/pamplejuce.png)
 [![](https://github.com/sudara/pamplejuce/actions/workflows/build_and_test.yml/badge.svg)](https://github.com/sudara/pamplejuce/actions)
 
