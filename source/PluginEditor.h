@@ -2,7 +2,10 @@
 
 #include "PluginProcessor.h"
 #include "BinaryData.h"
+
+#include <choc_DisableAllWarnings.h>
 #include "melatonin_inspector/melatonin_inspector.h"
+#include <choc_ReenableAllWarnings.h>
 
 //==============================================================================
 class PluginEditor : public juce::AudioProcessorEditor
