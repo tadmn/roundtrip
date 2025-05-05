@@ -39,6 +39,8 @@ set(FORMATS Standalone AU VST3)
 # For simplicity, the name of the CMake project is also the name of the target
 project(${PROJECT_NAME} VERSION ${CURRENT_VERSION})
 
+CPMAddPackage("gh:tadmn/choc#020ebce3e20628d4978e04ab23cea5fc70dea2aa")
+
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(FFMPEG REQUIRED
   libavcodec
@@ -154,6 +156,7 @@ target_link_libraries(SharedCode
     juce::juce_recommended_config_flags
     juce::juce_recommended_lto_flags
     juce::juce_recommended_warning_flags
+    choc
     ${FFMPEG_LIBRARIES})
 
 # Link the JUCE plugin targets our SharedCode target

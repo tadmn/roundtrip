@@ -86,6 +86,9 @@ void PluginProcessor::changeProgramName (int index, const juce::String& newName)
 //==============================================================================
 void PluginProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
+    jassert (getMainBusNumInputChannels() == getMainBusNumOutputChannels());
+    mCodecProcessor = std::make_unique<MP3Effect>(sampleRate, getMainBusNumInputChannels());
+
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
     juce::ignoreUnused (sampleRate, samplesPerBlock);
@@ -142,12 +145,7 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     // the samples and the outer loop is handling the channels.
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        auto* channelData = buffer.getWritePointer (channel);
-        juce::ignoreUnused (channelData);
-        // ..do something to the data...
-    }
+    mCodecProcessor->Process (buffer.getArrayOfWritePointers(), buffer.getNumSamples());
 }
 
 //==============================================================================
